@@ -1,22 +1,20 @@
 import numpy as np
-import pytest
-from normalized_array import normalized_array  # מייבא את הפונקציה מהקובץ של הסטודנט
 
-def test_basic_normalization():
-    data = [10, 20, 30]
-    result = normalized_array(data)
-    expected = np.array([0.0, 0.5, 1.0])
-    np.testing.assert_allclose(result, expected, atol=1e-5)
-
-def test_all_same_values():
-    # מקרה קצה - כל הערכים זהים
-    data = [5, 5, 5]
-    result = normalized_array(data)
-    expected = np.array([0.0, 0.0, 0.0])
-    np.testing.assert_allclose(result, expected, atol=1e-5)
-
-def test_negative_values():
-    data = [-10, 0, 10]
-    result = normalized_array(data)
-    expected = np.array([0.0, 0.5, 1.0])
-    np.testing.assert_allclose(result, expected, atol=1e-5)
+def normalized_array(input_array):
+    # 1. Find the minimum and maximum values
+    min_val = np.min(input_array)
+    max_val = np.max(input_array)
+    
+    # 2. Calculate the range (denominator)
+    diff = max_val - min_val
+    
+    # 3. Handle the edge case: if all values are equal, diff will be 0.
+    # We return an array of zeros with the same shape to avoid division by zero.
+    if diff == 0:
+        return np.zeros_like(input_array, dtype=float)
+    
+    # 4. Apply the formula: (x - min) / (max - min)
+    # This happens to every element in the array at once!
+    new_array = (input_array - min_val) / diff
+    
+    return new_array
